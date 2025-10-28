@@ -18,10 +18,10 @@ pipeline {
                 
                 script {
                     if (fileExists('prestashop/Dockerfile')) {
-                        echo '✅ PrestaShop Dockerfile found'
+                        echo ' PrestaShop Dockerfile found'
                         sh 'ls -la prestashop/'
                     } else {
-                        echo '❌ PrestaShop Dockerfile not found'
+                        echo ' PrestaShop Dockerfile not found'
                     }
                 }
             }
@@ -30,26 +30,26 @@ pipeline {
         stage('Test') {
             steps {
                 echo '=== Running Tests ==='
-                echo '✅ All tests passed'
+                echo ' All tests passed'
             }
         }
         
         stage('Deploy Ready') {
             steps {
                 echo '=== Build Completed Successfully ==='
-                echo '✅ PrestaShop ready for deployment'
-                echo '✅ Triggering Spinnaker CD pipeline'
+                echo ' PrestaShop ready for deployment'
+                echo ' Triggering Spinnaker CD pipeline'
             }
         }
     }
     
     post {
         success {
-            echo '🎉 CI Pipeline completed successfully!'
+            echo ' CI Pipeline completed successfully!'
             echo 'Next: Deploy via Spinnaker'
         }
         failure {
-            echo '❌ CI Pipeline failed'
+            echo ' CI Pipeline failed'
         }
     }
 }
