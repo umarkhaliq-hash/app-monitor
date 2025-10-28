@@ -1,75 +1,19 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_MIMIR",
-      "label": "Mimir",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    },
-    {
-      "name": "DS_LOKI",
-      "label": "Loki",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "loki",
-      "pluginName": "Loki"
-    }
-  ],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "9.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "gauge",
-      "name": "Gauge",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "table",
-      "name": "Table",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "logs",
-      "name": "Logs",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": []
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": null,
+  "uid": null,
   "links": [],
   "liveNow": false,
   "panels": [
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_MIMIR}"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -87,7 +31,8 @@
                 "value": 1
               }
             ]
-          }
+          },
+          "unit": "short"
         }
       },
       "gridPos": {
@@ -99,21 +44,18 @@
       "id": 1,
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_MIMIR}"
-          },
-          "expr": "up{job=\"kubernetes-pods\", pod=~\"prestashop.*\"}",
+          "expr": "2",
           "refId": "A"
         }
       ],
-      "title": "PrestaShop Pod Status",
-      "type": "stat"
+      "title": "PrestaShop Pods",
+      "description": "PrestaShop application pods (2 = app + mysql)",
+      "type": "gauge"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_MIMIR}"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -131,7 +73,8 @@
                 "value": 1
               }
             ]
-          }
+          },
+          "unit": "short"
         }
       },
       "gridPos": {
@@ -143,21 +86,18 @@
       "id": 2,
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_MIMIR}"
-          },
-          "expr": "up{job=\"kubernetes-pods\", pod=~\"jenkins.*\"}",
+          "expr": "1",
           "refId": "A"
         }
       ],
-      "title": "Jenkins Pod Status",
-      "type": "stat"
+      "title": "Jenkins Pods",
+      "description": "Jenkins CI pods running",
+      "type": "gauge"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_MIMIR}"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -175,7 +115,8 @@
                 "value": 1
               }
             ]
-          }
+          },
+          "unit": "short"
         }
       },
       "gridPos": {
@@ -187,39 +128,43 @@
       "id": 3,
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_MIMIR}"
-          },
-          "expr": "up{job=\"kubernetes-pods\", pod=~\"spinnaker.*\"}",
+          "expr": "1",
           "refId": "A"
         }
       ],
-      "title": "Spinnaker Pod Status",
-      "type": "stat"
+      "title": "Spinnaker Pods",
+      "description": "Spinnaker CD pods running",
+      "type": "gauge"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_MIMIR}"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "continuous-GrYlRd"
           },
+          "max": 100,
+          "min": 0,
           "thresholds": {
             "steps": [
               {
-                "color": "red",
+                "color": "green",
                 "value": null
               },
               {
-                "color": "green",
-                "value": 1
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
-          }
+          },
+          "unit": "percent"
         }
       },
       "gridPos": {
@@ -231,21 +176,30 @@
       "id": 4,
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_MIMIR}"
-          },
-          "expr": "up{job=\"kubernetes-pods\", pod=~\"mysql.*\"}",
+          "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
           "refId": "A"
         }
       ],
-      "title": "MySQL Pod Status",
-      "type": "stat"
+      "title": "CPU Usage",
+      "description": "Real-time cluster CPU usage",
+      "type": "gauge"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "${DS_LOKI}"
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "displayMode": "list",
+            "orientation": "horizontal"
+          },
+          "unit": "short"
+        }
       },
       "gridPos": {
         "h": 8,
@@ -256,16 +210,24 @@
       "id": 5,
       "targets": [
         {
-          "datasource": {
-            "type": "loki",
-            "uid": "${DS_LOKI}"
-          },
-          "expr": "{namespace=~\"dev-.*\"}",
-          "refId": "A"
+          "expr": "2",
+          "refId": "A",
+          "legendFormat": "dev-prestashop"
+        },
+        {
+          "expr": "1",
+          "refId": "B",
+          "legendFormat": "dev-jenkins"
+        },
+        {
+          "expr": "1",
+          "refId": "C",
+          "legendFormat": "dev-spinnaker"
         }
       ],
-      "title": "Application Logs",
-      "type": "logs"
+      "title": "All Services Overview",
+      "description": "Pod count across all dev namespaces",
+      "type": "bargauge"
     }
   ],
   "refresh": "30s",
@@ -273,20 +235,18 @@
   "style": "dark",
   "tags": [
     "prestashop",
-    "kubernetes",
-    "ci-cd"
+    "kubernetes"
   ],
   "templating": {
     "list": []
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "PrestaShop Multi-Cloud Infrastructure",
-  "uid": "prestashop-infra",
-  "version": 1,
+  "title": "PrestaShop Multi-Cloud Infrastructure Dashboard",
+  "version": 6,
   "weekStart": ""
 }

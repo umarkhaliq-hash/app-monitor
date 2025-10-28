@@ -23,6 +23,20 @@ resource "kubernetes_deployment" "grafana" {
           port {
             container_port = 3000
           }
+          env {
+            name  = "GF_SECURITY_ADMIN_PASSWORD"
+            value = "admin"
+          }
+          volume_mount {
+            name       = "grafana-datasources"
+            mount_path = "/etc/grafana/provisioning/datasources"
+          }
+        }
+        volume {
+          name = "grafana-datasources"
+          config_map {
+            name = kubernetes_config_map.grafana_datasources.metadata[0].name
+          }
         }
       }
     }

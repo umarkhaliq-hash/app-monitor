@@ -45,6 +45,7 @@ resource "kubernetes_daemonset" "promtail" {
         }
       }
       spec {
+        service_account_name = kubernetes_service_account.monitoring.metadata[0].name
         container {
           name  = "promtail"
           image = "grafana/promtail:latest"

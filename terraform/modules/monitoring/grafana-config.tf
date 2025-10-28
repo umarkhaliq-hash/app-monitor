@@ -11,10 +11,10 @@ datasources:
   type: loki
   access: proxy
   url: http://loki.dev-monitoring.svc.cluster.local:3100
-- name: Mimir
+- name: Prometheus
   type: prometheus
   access: proxy
-  url: http://mimir.dev-monitoring.svc.cluster.local:8080
+  url: http://prometheus.dev-monitoring.svc.cluster.local:9090
 - name: Tempo
   type: tempo
   access: proxy
