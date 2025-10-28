@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spinnaker-deck
+  namespace: dev-spinnaker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spinnaker-deck
+  template:
+    metadata:
+      labels:
+        app: spinnaker-deck
+    spec:
+      containers:
+      - name: deck
+        image: gcr.io/spinnaker-marketplace/deck:1.28.0
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+        - name: spinnaker-data
+          mountPath: /opt/spinnaker/config
+      volumes:
+      - name: spinnaker-data
+        persistentVolumeClaim:
+          claimName: spinnaker-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spinnaker-deck
+  namespace: dev-spinnaker
+spec:
+  selector:
+    app: spinnaker-deck
+  ports:
+  - port: 9000
+    targetPort: 9000
+  type: NodePort

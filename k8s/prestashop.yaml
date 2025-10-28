@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prestashop
+  namespace: dev-prestashop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prestashop
+  template:
+    metadata:
+      labels:
+        app: prestashop
+    spec:
+      containers:
+      - name: prestashop
+        image: prestashop/prestashop:8.1-apache
+        ports:
+        - containerPort: 80
+        env:
+        - name: DB_SERVER
+          value: "mysql"
+        - name: DB_NAME
+          value: "prestashop"
+        - name: DB_USER
+          value: "prestashop"
+        - name: DB_PASSWD
+          value: "prestashop"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: dev-prestashop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.0
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "root"
+        - name: MYSQL_DATABASE
+          value: "prestashop"
+        - name: MYSQL_USER
+          value: "prestashop"
+        - name: MYSQL_PASSWORD
+          value: "prestashop"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prestashop
+  namespace: dev-prestashop
+spec:
+  selector:
+    app: prestashop
+  ports:
+  - port: 80
+    targetPort: 80
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: dev-prestashop
+spec:
+  selector:
+    app: mysql
+  ports:
+  - port: 3306
+    targetPort: 3306

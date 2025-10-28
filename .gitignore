@@ -1,0 +1,38 @@
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/*.tfplan
+terraform/environments/*/terraform.tfstate
+terraform/environments/*/terraform.tfstate.backup
+terraform/environments/*/.terraform/
+
+# Kubernetes secrets
+**/secrets/
+**/*-secret.yaml
+**/*-secrets.yaml
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
