@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: deck
-        image: gcr.io/spinnaker-marketplace/deck:1.28.0
+        image: spinnaker/deck:1.28.0
         ports:
         - containerPort: 9000
         volumeMounts:

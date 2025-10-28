@@ -1,37 +1,20 @@
-# Manual Deployment Guide
+# Terraform Deployment Guide
 
 ## 1. Start Minikube
 ```bash
 minikube start
 ```
 
-## 2. Deploy Infrastructure (Terraform)
+## 2. Deploy Everything with Terraform
 ```bash
 cd terraform
 terraform init
 terraform apply
 ```
 
-## 3. Deploy Jenkins with Persistent Storage
+## 3. Destroy Everything
 ```bash
-kubectl apply -f jenkins/jenkins-pvc.yaml
-kubectl apply -f jenkins/jenkins.yaml
-```
-
-## 4. Deploy Spinnaker with Persistent Storage
-```bash
-kubectl apply -f spinnaker/spinnaker-pvc.yaml
-kubectl apply -f spinnaker/spinnaker.yaml
-```
-
-## 5. Deploy LGTM Monitoring Stack
-```bash
-kubectl apply -f monitoring/lgtm-stack.yaml
-```
-
-## 6. Deploy PrestaShop App
-```bash
-kubectl apply -f k8s/prestashop.yaml
+terraform destroy
 ```
 
 ## 7. Access Services

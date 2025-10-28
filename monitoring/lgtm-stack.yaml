@@ -85,6 +85,16 @@ spec:
         image: grafana/tempo:latest
         ports:
         - containerPort: 3200
+        args:
+        - "-config.file=/etc/tempo.yaml"
+        volumeMounts:
+        - name: tempo-config
+          mountPath: /etc/tempo.yaml
+          subPath: tempo.yaml
+      volumes:
+      - name: tempo-config
+        configMap:
+          name: tempo-config
 ---
 # Services
 apiVersion: v1
