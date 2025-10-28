@@ -39,6 +39,21 @@ pipeline {
                 echo '=== Build Completed Successfully ==='
                 echo '✅ PrestaShop ready for deployment'
                 echo '✅ Triggering Spinnaker CD pipeline'
+                
+                // Create deployment trigger file
+                writeFile file: 'deploy-trigger.txt', text: "BUILD_${BUILD_NUMBER}"
+                archiveArtifacts artifacts: 'deploy-trigger.txt'
+            }
+        }
+        
+        stage('Trigger CD') {
+            steps {
+                echo '=== Triggering Spinnaker Deployment ==='
+                sh '''
+                    echo "Deployment ready for Spinnaker"
+                    echo "Build: ${BUILD_NUMBER}"
+                    echo "Commit: ${GIT_COMMIT}"
+                '''
             }
         }
     }
