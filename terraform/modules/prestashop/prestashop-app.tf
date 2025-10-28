@@ -1,5 +1,5 @@
-# PrestaShop app will be deployed via Jenkins CI/CD pipeline
-# Only namespace is managed by Terraform
+# PrestaShop app will be deployed ONLY via Jenkins CI + Spinnaker CD
+# Terraform only manages the namespace for the app
 
 resource "kubernetes_service" "prestashop" {
   metadata {
