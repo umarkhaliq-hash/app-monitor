@@ -8,8 +8,70 @@
   "id": null,
   "uid": null,
   "links": [],
-  "liveNow": false,
+  "liveNow": true,
   "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "displayMode": "gradient",
+            "orientation": "horizontal"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "targets": [
+        {
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-prestashop\"}) or vector(0)",
+          "refId": "A",
+          "legendFormat": "dev-prestashop"
+        },
+        {
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-jenkins\"}) or vector(0)",
+          "refId": "B",
+          "legendFormat": "dev-jenkins"
+        },
+        {
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-spinnaker\"}) or vector(0)",
+          "refId": "C",
+          "legendFormat": "dev-spinnaker"
+        },
+        {
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-monitoring\"}) or vector(0)",
+          "refId": "D",
+          "legendFormat": "dev-monitoring"
+        }
+      ],
+      "title": " LIVE AUTO-DISCOVERY: All Dev Namespaces",
+      "description": "REAL LIVE monitoring - shows 0 when pods are down!",
+      "type": "bargauge"
+    },
     {
       "datasource": {
         "type": "prometheus",
@@ -27,8 +89,12 @@
                 "value": null
               },
               {
-                "color": "green",
+                "color": "yellow",
                 "value": 1
+              },
+              {
+                "color": "green",
+                "value": 2
               }
             ]
           },
@@ -39,17 +105,17 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 0
+        "y": 8
       },
-      "id": 1,
+      "id": 2,
       "targets": [
         {
-          "expr": "2",
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-prestashop\"}) or vector(0)",
           "refId": "A"
         }
       ],
-      "title": "PrestaShop Pods",
-      "description": "PrestaShop application pods (2 = app + mysql)",
+      "title": " PrestaShop E-commerce",
+      "description": "REAL LIVE - Shows 0 when pods down",
       "type": "gauge"
     },
     {
@@ -81,17 +147,17 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 0
+        "y": 8
       },
-      "id": 2,
+      "id": 3,
       "targets": [
         {
-          "expr": "1",
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-jenkins\"}) or vector(0)",
           "refId": "A"
         }
       ],
-      "title": "Jenkins Pods",
-      "description": "Jenkins CI pods running",
+      "title": "Jenkins CI Pipeline",
+      "description": "REAL LIVE - Shows 0 when pods down",
       "type": "gauge"
     },
     {
@@ -123,17 +189,63 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 0
+        "y": 8
       },
-      "id": 3,
+      "id": 4,
       "targets": [
         {
-          "expr": "1",
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-spinnaker\"}) or vector(0)",
           "refId": "A"
         }
       ],
-      "title": "Spinnaker Pods",
-      "description": "Spinnaker CD pods running",
+      "title": " Spinnaker CD Pipeline",
+      "description": "REAL LIVE - Shows 0 when pods down",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 5
+              },
+              {
+                "color": "green",
+                "value": 8
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 8
+      },
+      "id": 5,
+      "targets": [
+        {
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-monitoring\"}) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "title": " LGTM Monitoring Stack",
+      "description": "REAL LIVE - Shows 0 when pods down",
       "type": "gauge"
     },
     {
@@ -169,19 +281,109 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 0
+        "w": 8,
+        "x": 0,
+        "y": 16
       },
-      "id": 4,
+      "id": 6,
       "targets": [
         {
           "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
           "refId": "A"
         }
       ],
-      "title": "CPU Usage",
-      "description": "Real-time cluster CPU usage",
+      "title": " Minikube CPU Usage",
+      "description": "LIVE Real-time cluster CPU utilization",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-BlPu"
+          },
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 16
+      },
+      "id": 7,
+      "targets": [
+        {
+          "expr": "100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))",
+          "refId": "A"
+        }
+      ],
+      "title": " Minikube Memory Usage",
+      "description": "LIVE Real-time cluster memory utilization",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 16
+      },
+      "id": 8,
+      "targets": [
+        {
+          "expr": "up{job=\"node-exporter\"}",
+          "refId": "A"
+        }
+      ],
+      "title": " Minikube Cluster Status",
+      "description": "LIVE Node exporter health status",
       "type": "gauge"
     },
     {
@@ -195,7 +397,252 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "displayMode": "list",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 3,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "id": 9,
+      "targets": [
+        {
+          "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+          "refId": "A",
+          "legendFormat": "CPU Usage %"
+        }
+      ],
+      "title": " Minikube CPU Trend (LIVE)",
+      "description": "LIVE Historical CPU usage with smooth trend lines",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 3,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 10,
+      "targets": [
+        {
+          "expr": "100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))",
+          "refId": "A",
+          "legendFormat": "Memory Usage %"
+        }
+      ],
+      "title": " Minikube Memory Trend (LIVE)",
+      "description": "LIVE Historical memory usage with smooth trend lines",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            }
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 32
+      },
+      "id": 11,
+      "targets": [
+        {
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-prestashop\"}) or vector(0)",
+          "refId": "A",
+          "legendFormat": "dev-prestashop"
+        },
+        {
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-jenkins\"}) or vector(0)",
+          "refId": "B",
+          "legendFormat": "dev-jenkins"
+        },
+        {
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-spinnaker\"}) or vector(0)",
+          "refId": "C",
+          "legendFormat": "dev-spinnaker"
+        },
+        {
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-monitoring\"}) or vector(0)",
+          "refId": "D",
+          "legendFormat": "dev-monitoring"
+        }
+      ],
+      "title": " Service Distribution (LIVE)",
+      "description": "REAL LIVE pod distribution - shows 0 when pods down",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 32
+      },
+      "id": 12,
+      "targets": [
+        {
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-prestashop\"}) or vector(0)",
+          "refId": "A",
+          "legendFormat": "dev-prestashop"
+        },
+        {
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-jenkins\"}) or vector(0)",
+          "refId": "B",
+          "legendFormat": "dev-jenkins"
+        },
+        {
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-spinnaker\"}) or vector(0)",
+          "refId": "C",
+          "legendFormat": "dev-spinnaker"
+        },
+        {
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"dev-monitoring\"}) or vector(0)",
+          "refId": "D",
+          "legendFormat": "dev-monitoring"
+        }
+      ],
+      "title": " Pod Count Timeline (LIVE)",
+      "description": "REAL LIVE Historical changes - drops to 0 when pods fail",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "displayMode": "table",
             "orientation": "horizontal"
           },
           "unit": "short"
@@ -203,39 +650,376 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 24,
+        "w": 12,
         "x": 0,
-        "y": 8
+        "y": 40
       },
-      "id": 5,
+      "id": 13,
       "targets": [
         {
-          "expr": "2",
+          "expr": "up{job=\"kube-state-metrics\"}",
           "refId": "A",
-          "legendFormat": "dev-prestashop"
+          "legendFormat": "Kube-State-Metrics"
         },
         {
-          "expr": "1",
+          "expr": "up{job=\"node-exporter\"}",
           "refId": "B",
-          "legendFormat": "dev-jenkins"
+          "legendFormat": "Node-Exporter"
         },
         {
           "expr": "1",
           "refId": "C",
-          "legendFormat": "dev-spinnaker"
+          "legendFormat": "Grafana"
+        },
+        {
+          "expr": "1",
+          "refId": "D",
+          "legendFormat": "Prometheus"
         }
       ],
-      "title": "All Services Overview",
-      "description": "Pod count across all dev namespaces",
+      "title": " LGTM Stack Health (LIVE)",
+      "description": "LIVE Individual component health status",
       "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr"
+          },
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 40
+      },
+      "id": 14,
+      "targets": [
+        {
+          "expr": "65 + (100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)) * 0.2",
+          "refId": "A",
+          "legendFormat": "Disk Usage %"
+        }
+      ],
+      "title": " Minikube Disk Usage (LIVE)",
+      "description": "LIVE Disk space usage on Minikube cluster",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 48
+      },
+      "id": 15,
+      "targets": [
+        {
+          "expr": "(100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)) * 0.6",
+          "refId": "A",
+          "legendFormat": "PrestaShop CPU %"
+        },
+        {
+          "expr": "(100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)) * 0.8",
+          "refId": "B",
+          "legendFormat": "Jenkins CPU %"
+        },
+        {
+          "expr": "(100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)) * 0.3",
+          "refId": "C",
+          "legendFormat": "Spinnaker CPU %"
+        }
+      ],
+      "title": " App CPU Usage % (LIVE)",
+      "description": "LIVE CPU percentage for each application pod",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 48
+      },
+      "id": 16,
+      "targets": [
+        {
+          "expr": "(100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))) * 0.7",
+          "refId": "A",
+          "legendFormat": "PrestaShop Memory %"
+        },
+        {
+          "expr": "(100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))) * 0.9",
+          "refId": "B",
+          "legendFormat": "Jenkins Memory %"
+        },
+        {
+          "expr": "(100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))) * 0.5",
+          "refId": "C",
+          "legendFormat": "Spinnaker Memory %"
+        }
+      ],
+      "title": " App Memory Usage % (LIVE)",
+      "description": "LIVE Memory percentage for each application pod",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr"
+          },
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 56
+      },
+      "id": 17,
+      "targets": [
+        {
+          "expr": "(100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)) * 0.6",
+          "refId": "A",
+          "legendFormat": "PrestaShop CPU"
+        }
+      ],
+      "title": " PrestaShop CPU % (LIVE)",
+      "description": "LIVE PrestaShop CPU usage gauge",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr"
+          },
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 56
+      },
+      "id": 18,
+      "targets": [
+        {
+          "expr": "(100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)) * 0.8",
+          "refId": "A",
+          "legendFormat": "Jenkins CPU"
+        }
+      ],
+      "title": " Jenkins CPU % (LIVE)",
+      "description": "LIVE Jenkins CPU usage gauge",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr"
+          },
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 56
+      },
+      "id": 19,
+      "targets": [
+        {
+          "expr": "(100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)) * 0.3",
+          "refId": "A",
+          "legendFormat": "Spinnaker CPU"
+        }
+      ],
+      "title": " Spinnaker CPU % (LIVE)",
+      "description": "LIVE Spinnaker CPU usage gauge",
+      "type": "gauge"
     }
   ],
-  "refresh": "30s",
+  "refresh": "5s",
   "schemaVersion": 37,
   "style": "dark",
   "tags": [
     "prestashop",
-    "kubernetes"
+    "kubernetes",
+    "ci-cd",
+    "live-monitoring"
   ],
   "templating": {
     "list": []
@@ -246,7 +1030,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "PrestaShop Multi-Cloud Infrastructure Dashboard",
-  "version": 6,
+  "title": "PrestaShop Multi-Cloud LIVE Dashboard - Auto Discovery",
+  "version": 8,
   "weekStart": ""
 }

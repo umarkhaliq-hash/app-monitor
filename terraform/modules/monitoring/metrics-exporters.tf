@@ -64,6 +64,7 @@ resource "kubernetes_deployment" "kube_state_metrics" {
         }
       }
       spec {
+        service_account_name = kubernetes_service_account.monitoring.metadata[0].name
         container {
           name  = "kube-state-metrics"
           image = "registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.10.0"

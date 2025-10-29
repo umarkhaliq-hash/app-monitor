@@ -1,16 +1,10 @@
-#!/bin/bash
-echo " Spinnaker CD: Deploying PrestaShop..."
-
-# Deploy PrestaShop application
-kubectl apply -f - <<EOF
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prestashop
   namespace: dev-prestashop
   labels:
-    app: prestashop
-    deployed-by: spinnaker
+    build: "BUILD_NUMBER_PLACEHOLDER"
 spec:
   replicas: 1
   selector:
@@ -20,9 +14,7 @@ spec:
     metadata:
       labels:
         app: prestashop
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "80"
+        build: "BUILD_NUMBER_PLACEHOLDER"
     spec:
       containers:
       - name: prestashop
@@ -31,21 +23,21 @@ spec:
         - containerPort: 80
         env:
         - name: DB_SERVER
-          value: "mysql.dev-prestashop.svc.cluster.local"
+          value: "mysql"
         - name: DB_NAME
           value: "prestashop"
         - name: DB_USER
-          value: "root"
+          value: "prestashop"
         - name: DB_PASSWD
-          value: "root"
+          value: "prestashop"
         - name: PS_INSTALL_AUTO
           value: "1"
         - name: PS_DOMAIN
           value: "localhost:8090"
-        - name: PS_FOLDER_ADMIN
-          value: "admin"
-        - name: PS_FOLDER_INSTALL
-          value: "install"
+        - name: ADMIN_MAIL
+          value: "admin@prestashop.com"
+        - name: ADMIN_PASSWD
+          value: "admin123"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -53,8 +45,7 @@ metadata:
   name: mysql
   namespace: dev-prestashop
   labels:
-    app: mysql
-    deployed-by: spinnaker
+    build: "BUILD_NUMBER_PLACEHOLDER"
 spec:
   replicas: 1
   selector:
@@ -79,8 +70,28 @@ spec:
           value: "prestashop"
         - name: MYSQL_PASSWORD
           value: "prestashop"
-EOF
-
-echo " PrestaShop deployed successfully!"
-echo " Check status: kubectl get pods -n dev-prestashop"
-
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: dev-prestashop
+spec:
+  selector:
+    app: mysql
+  ports:
+  - port: 3306
+    targetPort: 3306
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prestashop
+  namespace: dev-prestashop
+spec:
+  selector:
+    app: prestashop
+  ports:
+  - port: 80
+    targetPort: 80
+  type: NodePort

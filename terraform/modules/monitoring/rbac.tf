@@ -11,7 +11,17 @@ resource "kubernetes_cluster_role" "monitoring" {
   }
   rule {
     api_groups = [""]
-    resources  = ["pods", "services", "endpoints", "nodes"]
+    resources  = ["pods", "services", "endpoints", "nodes", "namespaces", "limitranges", "persistentvolumes", "persistentvolumeclaims", "configmaps", "secrets", "events", "resourcequotas", "replicationcontrollers"]
+    verbs      = ["get", "list", "watch"]
+  }
+  rule {
+    api_groups = ["apps"]
+    resources  = ["deployments", "daemonsets", "replicasets", "statefulsets"]
+    verbs      = ["get", "list", "watch"]
+  }
+  rule {
+    api_groups = ["batch"]
+    resources  = ["cronjobs", "jobs"]
     verbs      = ["get", "list", "watch"]
   }
 }

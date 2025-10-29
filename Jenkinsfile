@@ -38,11 +38,20 @@ pipeline {
             steps {
                 echo '=== Build Completed Successfully ==='
                 echo ' PrestaShop ready for deployment'
-                echo ' Triggering Spinnaker CD pipeline'
+                echo ' Creating deployment artifacts'
+                
+                // Use GitHub template and replace placeholders
+                script {
+                    def templateContent = readFile('k8s/prestashop-template.yaml')
+                    def deploymentYaml = templateContent.replace('BUILD_NUMBER_PLACEHOLDER', "${BUILD_NUMBER}")
+                    writeFile file: 'prestashop-deployment.yaml', text: deploymentYaml
+                }
                 
                 // Create deployment trigger file
                 writeFile file: 'deploy-trigger.txt', text: "BUILD_${BUILD_NUMBER}"
-                archiveArtifacts artifacts: 'deploy-trigger.txt'
+                
+                // Archive both artifacts
+                archiveArtifacts artifacts: 'deploy-trigger.txt,prestashop-deployment.yaml'
             }
         }
         
